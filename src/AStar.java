@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class AStar {
@@ -39,12 +40,50 @@ public class AStar {
 					}
 				}
 				x.kids.add(s);
-				
+				if(!open.contains(s) && ! closed.contains(s)){
+					attachAndEval(s,x);
+					insert(s);
+				}
+				else if(x.g + arcCost(x, s) < s.g){
+					attachAndEval(s, x);
+					if(closed.contains(s))
+						propagatePathImprovements(s);
+				}
 			}
 		}
 		return true;
 	}
 		
+	private void propagatePathImprovements(Node p) {
+		for (Node c : p.kids) {
+			if(p.g + arcCost(p, c) < c.g){
+				c.parent = p;
+				c.g = p.g + arcCost(p, c);
+				c.f = c.g + c.h;
+				propagatePathImprovements(c);
+			}
+			
+		}
+		
+	}
+
+	private void insert(Node node) {
+		open.add(node);
+		Collections.sort(open, null); //TODO fiks comparator
+	}
+
+	private void attachAndEval(Node c, Node p) {
+		c.parent = p;
+		c.g = p.g + arcCost(p,c);
+		calculateH(c);
+		c.f = c.g + c.h;
+	}
+
+	private int arcCost(Node p, Node c) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	private Node findOld(Node node) {
 		if(open.contains(node))
 			return null;
