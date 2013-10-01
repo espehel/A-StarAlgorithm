@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 
-public class Node {
+public class Node implements Comparable<Node>{
 	State state;
 	int g;
 	int h;
@@ -9,4 +9,13 @@ public class Node {
 	boolean Open = true;
 	Node parent;
 	ArrayList<Node> kids;
+	
+	public Node(State state){
+		this.state = state;
+	}
+	@Override
+	public int compareTo(Node o) {
+		return this.f-o.f;
+	}
+	
 }

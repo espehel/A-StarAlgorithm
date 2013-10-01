@@ -18,8 +18,7 @@ public class AStar {
 		open.add(node);
 	}
 	
-	private void calculateH(Node node) {
-		node.h = 1+1; //TODO
+	protected void calculateH(Node node) {
 	}
 
 	public boolean bestFirstSearch() {
@@ -31,8 +30,7 @@ public class AStar {
 			if(solution(x))
 				return true;
 			succ = generateAllSuccesors();
-			for (Node s : succ) {
-				
+			for (Node s : succ) {	
 				Node sOld = findOld(s);
 				if(sOld != null){
 					if(s.state == sOld.state){
@@ -69,7 +67,7 @@ public class AStar {
 
 	private void insert(Node node) {
 		open.add(node);
-		Collections.sort(open, null); //TODO fiks comparator
+		Collections.sort(open);
 	}
 
 	private void attachAndEval(Node c, Node p) {
@@ -79,7 +77,7 @@ public class AStar {
 		c.f = c.g + c.h;
 	}
 
-	private int arcCost(Node p, Node c) {
+	protected int arcCost(Node p, Node c) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -93,12 +91,12 @@ public class AStar {
 			return null;
 	}
 
-	private ArrayList<Node> generateAllSuccesors() {
+	protected ArrayList<Node> generateAllSuccesors() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private boolean solution(Node x) {
+	protected boolean solution(Node x) {
 		// TODO Auto-generated method stub
 		return false;
 	}
