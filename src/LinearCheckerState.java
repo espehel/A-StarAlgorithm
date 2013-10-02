@@ -1,11 +1,12 @@
 
 public class LinearCheckerState extends State{
 	char[] state;
-	int id;
 	
-	public LinearCheckerState(int id, char[] state){
-		this.id = id;
+	public LinearCheckerState(char[] state){
 		this.state = state;
+		for (int i = 0; i < state.length; i++) {
+			id += i * state[i];
+		}
 	}
 
 }

@@ -29,7 +29,7 @@ public class AStar {
 			closed.add(x);
 			if(solution(x))
 				return true;
-			succ = generateAllSuccesors();
+			succ = generateAllSuccesors(x);
 			for (Node s : succ) {	
 				Node sOld = findOld(s);
 				if(sOld != null){
@@ -91,7 +91,7 @@ public class AStar {
 			return null;
 	}
 
-	protected ArrayList<Node> generateAllSuccesors() {
+	protected ArrayList<Node> generateAllSuccesors(Node node) {
 		// TODO Auto-generated method stub
 		return null;
 	}
