@@ -2,11 +2,18 @@
 public class AlgorithmProgram {
 	
 	public static void main(String[] args){
-		char[] initState = {'r','r','r',' ','b','b','b'};
-		Node initNode = new Node(new LinearCheckerState(initState));
+		//different variatons
+		char[] puzzle6 = {'b','b','b',' ','r','r','r'};
+		char[] puzzle12 = {'b','b','b','b','b','b',' ','r','r','r','r','r','r'};
+		char[] puzzle24 = {'b','b','b','b','b','b','b','b','b','b','b','b',' ','r','r','r','r','r','r','r','r','r','r','r','r'};
+		char[] puzzle30 = {'b','b','b','b','b','b','b','b','b','b','b','b','b','b','b',' ','r','r','r','r','r','r','r','r','r','r','r','r','r','r','r'};
+		
+		//initializing
+		Node initNode = new Node(new LinearCheckerState(puzzle30));
+		System.out.println("STARTING: " + ((LinearCheckerState)initNode.state).state.length + " cells");
 		AStar algorithm = new LinearCheckerAStar(initNode);
-//		algorithm.bestFirstSearch();
-		((LinearCheckerAStar)algorithm).testMethod(initNode);
+		//starting the search with the already given state
+		algorithm.bestFirstSearch();
 	}
 
 }

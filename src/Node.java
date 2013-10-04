@@ -12,7 +12,9 @@ public class Node implements Comparable<Node>{
 	
 	public Node(State state){
 		this.state = state;
+		kids = new ArrayList<Node>();
 	}
+	//used when the list of nodes is sorted
 	@Override
 	public int compareTo(Node o) {
 		return this.f-o.f;

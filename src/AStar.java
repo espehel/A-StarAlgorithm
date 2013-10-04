@@ -1,13 +1,23 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
+import sun.font.EAttribute;
 
-public class AStar {
 
+public abstract class AStar {
+	
+	protected long solutionId = 0;
 	ArrayList<Node> open, closed, succ;
 	boolean soloution = false;
 	Node target;
 	
+	//subclass must handle this
+	protected abstract void calculateH(Node node);
+	protected abstract ArrayList<Node> generateAllSuccesors(Node node);
+	protected abstract boolean solution(Node x);
+	protected abstract int arcCost(Node p, Node c);
+	
+	//initilizign with the starting node
 	public AStar(Node node){
 		open = new ArrayList<Node>();
 		closed = new ArrayList<Node>();
@@ -18,40 +28,51 @@ public class AStar {
 		open.add(node);
 	}
 	
-	protected void calculateH(Node node) {
-	}
-
+	//the search begins here
 	public boolean bestFirstSearch() {
 		while(!soloution){
-			if(open.isEmpty())
+			if(open.isEmpty()){
+				System.out.println("No more choices to explore");
+				System.out.println("SolutionId: " + solutionId);
 				return false;
+			}
+			//chooses the most optimal X
 			Node x = popNode();
 			closed.add(x);
-			if(solution(x))
+			System.out.println("X:\t\t" + x.state + " " + x.h + " + " + x.g + " = " + x.f);
+			//checks if it is a soulution
+			if(solution(x)){
+				System.out.println("SOLUTION:\t" + x.state);
+				System.out.println("nodes created: " + open.size() + closed.size());
 				return true;
+			}
+			//handles the possible moves from the state x
 			succ = generateAllSuccesors(x);
-			for (Node s : succ) {	
-				Node sOld = findOld(s);
-				if(sOld != null){
-					if(s.state == sOld.state){
-						s = sOld;
-					}
-				}
+			for (Node s : succ) {
+				//if this state already exist, we will use the node keeping it instead
+				Node old = findOld(s);
+				if(old != null)
+					s = old;
+				//makes the new node a child of x
 				x.kids.add(s);
-				if(!open.contains(s) && ! closed.contains(s)){
+				//if its a new state it will be inserted to open after evaluation
+				if(!open.contains(s) && !closed.contains(s)){
 					attachAndEval(s,x);
 					insert(s);
 				}
+				//if its an old node and x is a better parent it will be evalueted again.
 				else if(x.g + arcCost(x, s) < s.g){
 					attachAndEval(s, x);
-					if(closed.contains(s))
+					if(closed.contains(s)){
+						//if its closed all children will be evaluated with the new score of "s"
 						propagatePathImprovements(s);
+					}
 				}
 			}
 		}
 		return true;
 	}
-		
+	//recursivly checks if children has a better parent	
 	private void propagatePathImprovements(Node p) {
 		for (Node c : p.kids) {
 			if(p.g + arcCost(p, c) < c.g){
@@ -64,46 +85,43 @@ public class AStar {
 		}
 		
 	}
-
+	//inserts node and sorts the list on node.f
 	private void insert(Node node) {
+//		//A*
 		open.add(node);
 		Collections.sort(open);
+//		
+//		//dfs
+//		open.add(0, node);
+		
+		//bfs
+//		open.add(node);
 	}
-
+	//attaches parent to child and evaluates score
 	private void attachAndEval(Node c, Node p) {
 		c.parent = p;
 		c.g = p.g + arcCost(p,c);
 		calculateH(c);
 		c.f = c.g + c.h;
 	}
-
-	protected int arcCost(Node p, Node c) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	private Node findOld(Node node) {
-		if(open.contains(node))
-			return null;
-		else if (closed.contains(node))
-			return null;
-		else
-			return null;
-	}
-
-	protected ArrayList<Node> generateAllSuccesors(Node node) {
-		// TODO Auto-generated method stub
+	
+	//cheks the lists open and closed for the node by using the id of the state.
+	private Node findOld(Node node) {		
+		for (Node old : open) {
+			if(old.state.id == node.state.id){
+				return old;
+			}
+		}
+		for (Node old : closed) {
+			if(old.state.id == node.state.id){
+				return old;
+			}
+		}
 		return null;
 	}
-
-	protected boolean solution(Node x) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	//removes and returns the msot optimal node
 	private Node popNode() {
-		// TODO sorting
-		return open.remove(open.size()-1);
+		return open.remove(0);
 	}
 
 }
