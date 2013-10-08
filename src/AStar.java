@@ -1,5 +1,7 @@
+import java.awt.print.Printable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Stack;
 
 import sun.font.EAttribute;
 
@@ -9,7 +11,6 @@ public abstract class AStar {
 	protected long solutionId = 0;
 	ArrayList<Node> open, closed, succ;
 	boolean soloution = false;
-	Node target;
 	
 	//subclass must handle this
 	protected abstract void calculateH(Node node);
@@ -44,6 +45,7 @@ public abstract class AStar {
 			if(solution(x)){
 				System.out.println("SOLUTION:\t" + x.state);
 				System.out.println("nodes created: " + open.size() + closed.size());
+				printSolution(x);
 				return true;
 			}
 			//handles the possible moves from the state x
@@ -71,6 +73,19 @@ public abstract class AStar {
 			}
 		}
 		return true;
+	}
+	private void printSolution(Node solution) {
+			System.out.println("*********PRINTING SOLUTION**********");
+			Node current = solution;
+			Stack<String> winningMoves = new Stack<String>();
+			while(current != null){
+				winningMoves.push(current.state.toString());
+				current = current.parent;
+			}
+			while(!winningMoves.isEmpty()){
+				System.out.println(winningMoves.pop());
+			}
+		
 	}
 	//recursivly checks if children has a better parent	
 	private void propagatePathImprovements(Node p) {
